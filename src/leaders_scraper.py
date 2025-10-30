@@ -1,9 +1,13 @@
 
+import os
+import json
 import requests
 from bs4 import BeautifulSoup
 import re
+from concurrent.futures import ThreadPoolExecutor #For Multithreading
 
-from concurrent.futures import ThreadPoolExecutor #Multiprocessing
+MAIN_FOLDER = "/Users/annalalova/workspace/Wikipedia-Scraper/src"
+filename = os.path.join(MAIN_FOLDER, "leaders.json")
 
 """"Thread for a single leader, instead of having a leader-in-leaders loop in the countries loop below"""
 
@@ -84,6 +88,7 @@ leaders_per_country = get_leaders(session)
 Saving the leaders.json dictionary and checking the data
 
 """
+
 def save_leaders(leaders_per_country, filename = "leaders.json"):
     """"
     
