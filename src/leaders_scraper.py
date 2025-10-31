@@ -13,7 +13,10 @@ filename_json = os.path.join(MAIN_FOLDER, "leaders.json")
 filename_csv = os.path.join(MAIN_FOLDER, "leaders.csv")
 
 
-""""Thread for a single leader, instead of having a leader-in-leaders loop in the countries loop below"""
+""""
+Runs per leader in a thread and delegates the HTTP work (per leader) to the get_first_paragraph method below, 
+instead of having a leader-in-leaders loop in the countries loop below
+"""
 
 def threads_leader_paragraph(leader, session): # Passing session; timeout in the requests ensure smooth running of
     wikipedia_url = leader.get("wikipedia_url")
@@ -51,7 +54,9 @@ with requests.Session() as session: # "with" handles also the closing of the ses
             leaders_per_country[c] = leaders #Append each result to the leaders dictionary
         return leaders_per_country
 
-
+"""
+Fetches the Wikipedia page and extracts the first paragraph.
+"""
 def get_first_paragraph(wikipedia_url, leader, session):
     try: 
         leader_wiki = session.get(wikipedia_url,headers = {"User-Agent":"Wikipedia-Scraper(learning project; https://github.com/Lalovan/; contact: anna.ivailova@gmail.com)"}, timeout = 3)
@@ -63,7 +68,6 @@ def get_first_paragraph(wikipedia_url, leader, session):
   
     paragraphs = [p.get_text() for p in leader_soup.find_all("p")] # This "get" has nothing to do with the HTTP requests, so it remains as it was 
     first_name = (leader.get("first_name") or "").lower()
-    #last_name = (leader.get("last_name") or "").lower()
     birth_year = (leader.get("birth_date") or "")[:4] 
         
     first_paragraph = ""
@@ -89,7 +93,7 @@ leaders_per_country = get_leaders(session)
 
 
 """
-Saving the leaders.json dictionary and checking the data
+Saves self.leaders_per_country to .json and .csv; checking the data
 
 """
 
