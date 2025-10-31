@@ -75,7 +75,7 @@ def get_first_paragraph(wikipedia_url, leader, session):
             first_paragraph = para_text
             break
         
-# Cleaning up the first paragraph; regex
+
     clean_spaces = re.sub(r"\s+", " ", first_paragraph) # Cleaning up extra spaces
     clean_footnotes = re.sub(r"\[\d+\]", "", clean_spaces) # Cleaning up footnotes numbering [1], [2]
     clean_references = re.sub(r"\[\d+\]", "", clean_footnotes) # Cleaning up references in brackets [a], [b]
