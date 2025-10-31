@@ -1,13 +1,17 @@
 
 import os
 import json
+import csv
 import requests
 from bs4 import BeautifulSoup
 import re
-from concurrent.futures import ThreadPoolExecutor #For Multithreading
+from concurrent.futures import ThreadPoolExecutor
 
 MAIN_FOLDER = "/Users/annalalova/workspace/Wikipedia-Scraper/src"
-filename = os.path.join(MAIN_FOLDER, "leaders.json")
+os.makedirs(MAIN_FOLDER, exist_ok=True) #Telling python this folder exist...
+filename_json = os.path.join(MAIN_FOLDER, "leaders.json")
+filename_csv = os.path.join(MAIN_FOLDER, "leaders.csv")
+
 
 """"Thread for a single leader, instead of having a leader-in-leaders loop in the countries loop below"""
 
@@ -89,17 +93,30 @@ Saving the leaders.json dictionary and checking the data
 
 """
 
-def save_leaders(leaders_per_country, filename = "leaders.json"):
-    """"
+def save_leaders(leaders_per_country, filename_json = "leaders.json", filename_csv = "leaders.csv"):
     
-    """
-    with open(filename, "w", encoding="utf-8") as f:
+    with open(filename_json, "w", encoding="utf-8") as f: # Saving as json
         json.dump(leaders_per_country, f, ensure_ascii=False, indent=2)
-save_leaders(leaders_per_country,"leaders.json")
 
-with open("leaders.json", "r", encoding="utf-8") as f:
-    leaders_loaded = json.load(f)
+    with open(filename_csv, "w", newline = "", encoding="utf-8") as csvfile: # Saving as csv
+        writer = csv.writer(csvfile)
+        writer.writerow(["country", "leader"])
 
-print("Number of countries:", len(leaders_per_country),len(leaders_loaded))
-for country in leaders_per_country:
-    print(country,len(leaders_per_country[country]),len(leaders_loaded.get(country, [])))
+        for country, leaders in leaders_per_country.items():
+        #Chekcing whether the value is a list: if a list, it loops through it, if not it treats leaders as a single leader name and writes it once
+            if isinstance(leaders, list): 
+                for leader in leaders:
+                    writer.writerow([country, leader]) #Creates a row per leader
+            else:
+                writer.writerow([country, str(leaders)])# Runs in the case the value is not a list
+
+save_leaders(leaders_per_country,filename_json,filename_csv)
+
+#Reading it again
+#with open("leaders.json", "r", encoding="utf-8") as f:
+    #leaders_loaded = json.load(f)
+
+#Checking if the data is the same
+#print("Number of countries:", len(leaders_per_country),len(leaders_loaded))
+#for country in leaders_per_country:
+    #print(country,len(leaders_per_country[country]),len(leaders_loaded.get(country, [])))
