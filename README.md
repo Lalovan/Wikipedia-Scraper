@@ -1,6 +1,6 @@
 # Wikipedia-Scraper
 
-**🏢 Description ℹ️**
+## 🏢 Description ℹ️ ##
 
 The ```Wikipedia-Scraper``` is a Python code designed to efficiently retrieve and process data on world leaders from the Country Leaders API. It automatically fetches the list of countries, retrieves leaders for each country, and scrapes the first paragraph of their Wikipedia pages. 
 
@@ -12,7 +12,7 @@ Using multithreading, it speeds up the process by fetching multiple leader pages
 
 The scraper organizes all data into a dictionary for easy access and later storage. This project demonstrates the power of object-oriented programming for API interaction and web scraping. By encapsulating endpoints, session management, cookie handling, and data parsing in a single class, it offers a clean and reusable framework for structured data retrieval from multiple sources.
 
-**🧱 Repository Structure**
+## 🧱 Repository Structure ##
 
 ```
 Wikipedia-Scraper
@@ -29,7 +29,7 @@ Wikipedia-Scraper
 ```
 
 
-**💿 Installation**
+## 💿 Installation ##
 
 Both scripts require Python 3.9+ and the following dependencies:
 - ```requests``` for HTTP requests and session management
@@ -45,7 +45,7 @@ pip install requests beautifulsoup4 lxml
 
 Clone or download the repository, and you can run either script or import the OOP class into your own project.
 
-**📲 Usage**
+## 📲 Usage ##
 
 **Procedural Script:**
 ```python 
@@ -58,7 +58,7 @@ Clone or download the repository, and you can run either script or import the OO
 
 Both scripts automatically handle cookies and use multithreading to speed up Wikipedia page retrieval. The OOP version additionally organizes functionality into a reusable class with internal state (```self.leaders_per_country```) and shared session management.
 
-**📊 Output:**
+## 📊 Output: ##
 
 Both scripts produce structured output:
 
