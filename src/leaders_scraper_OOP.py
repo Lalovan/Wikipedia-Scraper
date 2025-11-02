@@ -48,10 +48,10 @@ class WikipediaScraper:
         self.leaders_per_country = {} # initializing a dictionary, where we store the data
 
     """
-    Methods sets up the cookies in the session
+    Method that sets up the cookies in the session
     """
-    def refresh_cookie(self) -> object: #Returns cookie if cookie has expired; do not need it if session
-        req_cookie = self.session.get(f"{self.root_url}/{self.cookie_url}", timeout = 3) #checking for status_code 401, 403
+    def refresh_cookie(self) -> object: #Returns cookie if cookie has expired;
+        req_cookie = self.session.get(f"{self.root_url}/{self.cookie_url}", timeout = 3)
         self.cookie = req_cookie.cookies 
         return req_cookie.cookies
 
@@ -61,7 +61,7 @@ class WikipediaScraper:
     """
     def get_countries(self) -> list: #returns a list of the supported countries from the API
         countries = self.session.get(f"{self.root_url}/{self.countries_url}", timeout = 3) # Calling the API
-        return countries.json() # List of country/countries abbrev .json 
+        return countries.json() # List of country/countries abbrevs .json 
     
     """
     Core API Fetch Method 2: 
@@ -103,7 +103,7 @@ class WikipediaScraper:
 
     """
     Processing Mehtod 2: 
-    Fetches the Wikipedia page and extracts the first paragraph.   
+    (Indirect Multithreading) Fetches the Wikipedia page and extracts the first paragraph.   
     """
     def get_first_paragraph(self,wikipedia_url: str, leader):
         try: 

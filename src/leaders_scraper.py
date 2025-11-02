@@ -14,11 +14,12 @@ filename_csv = os.path.join(MAIN_FOLDER, "leaders.csv")
 
 
 """"
-Runs per leader in a thread and delegates the HTTP work (per leader) to the get_first_paragraph method below, 
+This function runs per leader in a thread and delegates the HTTP work (per leader) to the get_first_paragraph method below, 
 instead of having a leader-in-leaders loop in the countries loop below
+Kept outside session so prevents each thread to open own session
 """
 
-def threads_leader_paragraph(leader, session): # Passing session; timeout in the requests ensure smooth running of
+def threads_leader_paragraph(leader, session): # "The Worker" function that delegates the HTTP work (per leader) to def get_first_paragraph; previosuly - a nested loop below
     wikipedia_url = leader.get("wikipedia_url")
     if wikipedia_url:
         leader["first_paragraph"] = get_first_paragraph(wikipedia_url, leader, session)
@@ -26,7 +27,7 @@ def threads_leader_paragraph(leader, session): # Passing session; timeout in the
         leader["first_paragraph"] = None
     return leader
 
-with requests.Session() as session: # "with" handles also the closing of the session
+with requests.Session() as session: #Creating a temporary session;"with" handles also the closing of the session
 
     def get_leaders(session):
         #Defining URLs
@@ -36,7 +37,7 @@ with requests.Session() as session: # "with" handles also the closing of the ses
         cookie_url = "cookie"    
         #Getting cookies 
         req_cookie = session.get(f"{root_url}/{cookie_url}", timeout = 3)
-        #Getting countries
+        #Getting country codes list
         countries = session.get(f"{root_url}/{countries_url}", cookies = req_cookie.cookies, timeout = 3).json()
         #Iterating over countries and saving leaders in a dictionary
         leaders_per_country = {}
@@ -49,13 +50,13 @@ with requests.Session() as session: # "with" handles also the closing of the ses
             # Multithreading : executes for 18.3s, while without it - 22.4s
             # Using lambda to apply a thread to each leader in parallel, while sharing the same session
             with ThreadPoolExecutor(max_workers=5) as executor:
-                leaders = list(executor.map(lambda l: threads_leader_paragraph(l, session), leaders))
+                leaders = list(executor.map(lambda l: threads_leader_paragraph(l, session), leaders)) #each thread runs this for 1 leader
 
             leaders_per_country[c] = leaders #Append each result to the leaders dictionary
         return leaders_per_country
 
 """
-Fetches the Wikipedia page and extracts the first paragraph.
+Fetches the Wikipedia page and extracts the first paragraph
 """
 def get_first_paragraph(wikipedia_url, leader, session):
     try: 
