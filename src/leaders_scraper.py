@@ -48,12 +48,12 @@ with requests.Session() as session: #Creating a temporary session;"with" handles
             print(f"Processing country: {c}, leaders found: {len(leaders)}") # Checking progress
             
             # Multithreading : executes for 18.3s, while without it - 22.4s
-            # Using lambda to apply a thread to each leader in parallel, while sharing the same session
+            # Using lambda to apply a thread to each leader in parallel, while sharing the same session; without lambda, executor will run threads_leader_paragraph(leader), but we also need session as an argument
             with ThreadPoolExecutor(max_workers=5) as executor:
-                leaders = list(executor.map(lambda l: threads_leader_paragraph(l, session), leaders)) #each thread runs this for 1 leader
+                leaders = list(executor.map(lambda l: threads_leader_paragraph(l, session), leaders)) #the executor runs the function for each item in the list
 
             leaders_per_country[c] = leaders #Append each result to the leaders dictionary
-        return leaders_per_country
+        return leaders_per_country #Finla data structure
 
 """
 Fetches the Wikipedia page and extracts the first paragraph
